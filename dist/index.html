@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f8f7f2">
+  <meta name="description" content="Teach Pip, a little ragdoll robot, to move. Guide a joint, run a trial, and see what your robot learns.">
+  <title>Motor School — Teach Pip to move</title>
+  <link rel="icon" type="image/png" href="./assets/pip.png">
+  <link rel="apple-touch-icon" href="./assets/pip.png">
+  <link rel="preload" as="font" type="font/woff" href="./assets/rubik-bold.woff" crossorigin>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell bar-inner">
+      <div class="brand"><img src="./assets/pip.png" alt="" width="43" height="43"><span>Motor School</span></div>
+      <nav aria-label="Game tools">
+        <button id="helpBtn" class="quiet-btn"><canvas data-icon="book"></canvas><span>How to play</span></button>
+        <span class="nav-rule" aria-hidden="true"></span>
+        <button id="soundBtn" class="icon-btn sound" title="Turn sound on" aria-label="Turn sound on" aria-pressed="false"><canvas data-icon="mute"></canvas></button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <header class="lesson">
+      <div class="lesson-info">
+        <div class="lesson-mark"><span aria-hidden="true" id="lessonBars"><i></i><i></i><i></i></span><span id="lessonNumber">Lesson 01 / 03</span></div>
+        <h1 id="lessonName">First steps</h1>
+        <p id="lessonDesc">Teach Pip to walk 2 metres on its own.</p>
+      </div>
+      <button class="outline-btn course-btn" id="courseBtn"><canvas data-icon="layers"></canvas><span>Lessons</span><canvas class="small" data-icon="down"></canvas></button>
+    </header>
+
+    <div class="workbench">
+      <section class="arena-card" id="arenaCard" aria-label="Robot training floor">
+        <div class="stage">
+          <canvas id="field" tabindex="0" aria-label="Pip’s training floor. Drag the robot to teach it. With the keyboard, press J to select a joint, then hold Space and use the arrow keys. Release Space to save.">Your browser needs Canvas to draw the training floor.</canvas>
+          <div class="stage-top">
+            <div id="modeTag" class="mode-tag"><span class="mode-light"></span><span id="modeText">Teach mode</span></div>
+            <button id="expandBtn" class="expand-btn icon-btn" title="Expand training floor" aria-label="Expand training floor" aria-pressed="false"><canvas data-icon="expand"></canvas></button>
+          </div>
+          <div class="trial-clock" id="trialClock" hidden><canvas data-icon="timer"></canvas><span id="timeLeft"></span></div>
+        </div>
+        <div class="distance-bar">
+          <div class="distance-label"><canvas data-icon="ruler"></canvas><span>Trial distance</span></div>
+          <div class="meter" id="meter" role="progressbar" aria-label="Trial distance" aria-valuenow="0" aria-valuemin="0" aria-valuemax="2"><span id="meterFill"></span></div>
+          <div class="meter-value"><strong id="distance">0.00</strong><span id="targetDistance"> / 2.00 m</span></div>
+          <button id="expandedRun" class="outline-btn" hidden>Run test</button>
+        </div>
+      </section>
+
+      <aside class="memory-card" aria-labelledby="memoryTitle">
+        <div class="card-heading"><div class="chip-icon"><canvas data-icon="chip"></canvas></div><h2 id="memoryTitle">Motor memory</h2></div>
+        <div class="stats">
+          <div><span>Demonstrations</span><strong id="exampleCount">0</strong></div>
+          <div><span>Best distance</span><strong><span id="bestDistance">0.00</span><small> m</small></strong></div>
+        </div>
+        <div class="trace-block">
+          <div class="trace-head"><span><i class="trace-dot"></i>Motion trace</span><button id="undoBtn" class="undo-btn" aria-label="Undo last demonstration" title="Undo last demonstration" disabled><canvas data-icon="undo"></canvas></button></div>
+          <div class="trace-frame"><canvas id="trace" aria-label="Learned movement of the most recently trained joint"></canvas><span id="traceState">Waiting for a drag</span></div>
+        </div>
+        <div class="controls">
+          <button id="runBtn" class="run-btn"><canvas data-icon="play"></canvas><span>Run test</span></button>
+          <button id="resetBtn" class="reset-btn"><canvas data-icon="reset"></canvas><span>Reset pose</span></button>
+        </div>
+        <div class="saved"><canvas data-icon="device"></canvas><span id="saveState">Memory stays on this device</span></div>
+      </aside>
+
+      <section class="coach" aria-label="Coaching feedback">
+        <div class="coach-icon"><canvas data-icon="bulb"></canvas></div>
+        <div class="coach-copy"><h2>Coach’s note</h2><p id="coachText" role="status" aria-live="polite">Grab a foot, lift it, sweep it toward the flag, then let go. Run a test to see what Pip learned.</p></div>
+        <button id="nextBtn" class="outline-btn" hidden>Next lesson</button>
+      </section>
+    </div>
+  </main>
+
+  <dialog id="helpDialog" aria-labelledby="helpTitle">
+    <div class="dialog-head"><h2 id="helpTitle">How to play</h2><button class="icon-btn close-btn" aria-label="Close help"><canvas data-icon="close"></canvas></button></div>
+    <ol class="steps">
+      <li><strong>Guide a joint.</strong><p>Drag a foot in a small upward arc toward the flag. You can also guide a leg, arm, hand, head, back, or belly.</p></li>
+      <li><strong>Let go to teach.</strong><p>Each gesture trains Pip’s motor memory. A foot lesson also gives the other leg a starting point. Teach either leg again to refine its step.</p></li>
+      <li><strong>Run a test.</strong><p>Pip tries the course on its own. Between trials it experiments with cadence, reach, and lift, keeping changes that score better.</p></li>
+    </ol>
+    <details class="keyboard-help"><summary>Keyboard controls</summary><p>Tab to the training floor. Press <kbd>J</kbd> to cycle through joints. Hold <kbd>Space</kbd>, move with the arrow keys, then release <kbd>Space</kbd> to teach. <kbd>Enter</kbd> starts or stops a test.</p></details>
+    <div class="help-footer"><button id="clearBtn" class="text-btn">Clear motor memory</button><button class="outline-btn close-btn">Got it</button></div>
+    <section id="clearConfirm" class="confirm" hidden><strong>Clear Pip’s training?</strong><p>This erases the demonstrations and course records saved in this browser.</p><div><button class="outline-btn" id="keepBtn">Keep memory</button><button class="danger-btn" id="eraseBtn">Clear memory</button></div></section>
+  </dialog>
+
+  <dialog id="lessonsDialog" aria-labelledby="lessonsTitle">
+    <div class="dialog-head"><h2 id="lessonsTitle">Lessons</h2><button class="icon-btn close-btn" aria-label="Close lessons"><canvas data-icon="close"></canvas></button></div>
+    <p class="dialog-description">Pip takes its motor memory from one course to the next.</p>
+    <div id="lessonList" class="lesson-list"></div>
+  </dialog>
+  <script type="module" src="./main.mjs"></script>
+</body>
+</html>
