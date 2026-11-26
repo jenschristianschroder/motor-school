@@ -21,6 +21,8 @@ canvas[data-icon]{display:block;flex:none;width:20px;height:20px;pointer-events:
 .brand{gap:11px;font-size:1.62rem;font-weight:700;letter-spacing:-.065em;line-height:1}
 .brand img{width:44px;height:44px;display:block}
 nav{gap:17px}
+.other-game{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:#31503a;font-size:.89rem;font-weight:500;text-decoration:none}.other-game:hover{text-decoration:underline;text-underline-offset:3px}.other-game img{border-radius:5px}
+@media(max-width:540px){.other-game{font-size:.77rem;gap:4px}.other-game img{width:19px;height:19px}#helpBtn span{display:none}}
 .quiet-btn,.icon-btn,.text-btn,.undo-btn{border:0;background:transparent}
 .quiet-btn{gap:8px;font-weight:500;font-size:.93rem;padding:8px 3px}
 .quiet-btn:hover,.text-btn:hover{color:#a64224}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f5e9">
+  <meta name="description" content="Coach Fern the sheepdog, train her with reinforcement learning, and put two generations to the same field trial.">
+  <title>Off the Lead · Motor School</title>
+  <link rel="icon" href="./fern.png" type="image/png"><link rel="apple-touch-icon" href="./fern.png">
+  <link rel="stylesheet" href="./field.css">
+  <script type="module" src="./game.mjs"></script>
+</head>
+<body>
+  <header class="mast"><div class="shell mast-inner">
+    <div class="identity"><img src="./fern.png" alt="" width="42" height="42"><span>Off the Lead</span></div>
+    <nav aria-label="Game navigation"><a href="../">Motor School</a><span class="nav-rule"></span><button class="nav-btn" id="helpBtn"><i class="help-i" aria-hidden="true">?</i> How to play</button></nav>
+  </div></header>
+  <main class="shell">
+    <div class="opening">
+      <div><div class="eyebrow"><i class="flag-i" aria-hidden="true"></i><span id="drillTitle">Stray recovery</span></div>
+        <h1 id="fieldTitle">Clover Meadow</h1><p>Bring all eight sheep through the gate before the whistle.</p></div>
+      <button id="fieldsBtn" class="light-btn fields-btn"><i class="fence-i" aria-hidden="true"></i> Fields</button>
+    </div>
+    <div class="bench">
+      <section class="pitch-card" aria-label="Sheepdog trial">
+        <div class="pitch-wrap">
+          <canvas id="pitch" tabindex="0" aria-label="Herding field. While coaching, hold or drag anywhere to guide Fern. You can also focus this field and use the arrow keys or W A S D.">Canvas is needed to play this game.</canvas>
+          <div class="pitch-hud">
+            <span id="modeTag" class="mode"><i></i><span id="modeText">At the post</span></span>
+            <div class="hud-right"><button id="speedBtn" class="hud-btn" title="Change trial speed" aria-label="Trial speed, 1 times">1×</button><span class="clock" aria-label="Time remaining"><i class="clock-i" aria-hidden="true"></i><strong id="clock">38 s</strong></span></div>
+          </div>
+          <div id="coachSign" class="coach-sign" hidden>Hold in the field to guide Fern</div>
+        </div>
+        <div class="readout"><div class="pen-metric"><span class="metric-name">Penned</span><span id="sheepMarks" class="sheep-marks" aria-hidden="true"></span><strong><span id="penned">0</span> / 8</strong></div>
+          <div class="stress-metric"><span class="metric-name">Flock stress</span><span class="stress-rail" aria-hidden="true"><i id="stressFill"></i></span><strong id="stress">0%</strong></div></div>
+      </section>
+      <aside class="kennel" aria-labelledby="kennelTitle">
+        <div class="dog-heading"><img src="./fern.png" alt="" width="56" height="56"><div><span class="over">Working dog</span><h2 id="kennelTitle">Fern</h2></div><span class="model-tag" id="modelTag">G0</span></div>
+        <div class="ledger">
+          <div><span>Saved lessons</span><strong id="lessonCount">0</strong></div>
+          <div><span>Coach breaks</span><strong id="breakCount">3 / 3</strong></div>
+        </div>
+        <div class="field-buttons">
+          <button class="primary" id="fieldAction"><i class="play-i" id="actionIcon" aria-hidden="true"></i><span>Run trial</span></button>
+          <button class="secondary" id="coachBtn">Coach Fern</button>
+        </div>
+        <div class="model-tools">
+          <button id="trainBtn"><i class="training-i" aria-hidden="true"></i><span>Train a generation</span><b aria-hidden="true">+</b></button>
+          <button id="compareBtn"><i class="compare-i" aria-hidden="true"></i><span>Compare dogs</span><span class="dog-count" id="dogCount">1</span></button>
+        </div>
+        <small class="local" id="localState">Kennel saved on this device</small>
+      </aside>
+      <section class="field-note" aria-label="Field notes"><i class="note-icon" aria-hidden="true">✎</i><div><h2>Field note</h2><p id="note" role="status">Run a trial to watch Fern work. Rewind a mistake and guide her through a better approach.</p></div></section>
+    </div>
+  </main>
+
+  <dialog id="help" aria-labelledby="helpTitle"><div class="dialog-head"><h2 id="helpTitle">How to play</h2><button class="close" aria-label="Close help">×</button></div>
+    <ol class="instructions">
+      <li><strong>Read the flock.</strong> Sheep move away from Fern. A wide loop gets her behind a stray. At the gate, ease off if the sheep start to scatter.</li>
+      <li><strong>Show one correction.</strong> During a trial, choose <b>Rewind &amp; coach</b> to go back five field seconds. Hold or drag in the field to steer. Aim nearby to slow down. Release to stop. Each round allows three saved lessons.</li>
+      <li><strong>Train a generation.</strong> Select examples and split six practice blocks between drills. Fern imitates your steering, then learns from rewards in 84 simulated runs. She earns points for moving the flock toward the gate and penning sheep. Stress and elapsed time cost points.</li>
+      <li><strong>Test both dogs.</strong> Replay a saved mistake or draw a fresh qualification field. Both dogs face identical sheep. Choose either saved model for future trials.</li>
+    </ol>
+    <details><summary>Controls and scoring</summary><p>While coaching, focus the field and use the arrow keys or WASD to steer. Hold Shift to run. One break records up to seven seconds after your first input.</p><p>Trials rank sheep penned first, then lower average flock stress, then quicker time. Qualify by penning all eight on an unseen field. Earn a clean card for each of the three drills.</p></details>
+    <div class="dialog-foot"><button class="secondary close-text">Back to the field</button></div>
+  </dialog>
+  <dialog id="fields" aria-labelledby="fieldsTitle"><div class="dialog-head"><h2 id="fieldsTitle">Field book</h2><button class="close" aria-label="Close field book">×</button></div>
+    <p class="intro">Pick a drill for a fresh practice field. Qualification cards come from unseen trials in Compare dogs.</p>
+    <div class="field-list" id="fieldsList"></div><div class="dialog-foot"><button id="restartBtn" class="secondary">Restart this field</button></div>
+  </dialog>
+  <dialog id="training" aria-labelledby="trainingTitle"><div class="dialog-head"><h2 id="trainingTitle">Train a generation</h2><button class="close" aria-label="Close training">×</button></div>
+    <div id="trainSetup"><p class="intro" id="trainParent">Start from the active dog and divide six practice blocks between the drills.</p>
+      <div class="section-label"><h3>Practice budget</h3><span id="remainingBlocks">0 unassigned</span></div>
+      <div id="budgetRows" class="budget-rows"></div><p class="micro">Remove a block from one drill to spend it on another. Each block runs 14 episodes.</p>
+      <details class="lesson-details"><summary id="lessonSummary">Training examples</summary><div class="lesson-list" id="lessonList"></div></details>
+      <button class="primary full" id="beginTraining">Train with 6 blocks</button>
+    </div>
+    <div id="trainProgress" hidden><p class="intro" id="trainStatus" aria-live="polite">Preparing the practice fields…</p><progress id="trainBar" value="0" max="84"></progress><div class="section-label"><span>Practice episodes</span><strong id="episodeCount">0 / 84</strong></div><button class="secondary full" id="cancelTraining">Cancel training</button></div>
+  </dialog>
+  <dialog id="comparison" class="wide" aria-labelledby="compareTitle"><div class="dialog-head"><h2 id="compareTitle">Compare dogs</h2><button class="close" aria-label="Close comparison">×</button></div>
+    <p id="comparisonIntro" class="intro">Two frozen models, one starting field. Select a dog for each run.</p>
+    <div class="race-settings"><label>Trial<select id="raceScene"></select></label><button class="secondary" id="raceRun">Start comparison</button><button class="mini" id="raceSpeed" aria-label="Change comparison speed">4×</button></div>
+    <div class="race-pair">
+      <section class="race-card"><div class="race-top"><label for="dogA">Dog A</label><select id="dogA"></select></div><canvas id="pitchA" aria-label="Dog A comparison field"></canvas><div class="race-readout" id="scoreA">0 / 8 penned</div><button id="useA" class="secondary full">Work with dog A</button></section>
+      <section class="race-card"><div class="race-top"><label for="dogB">Dog B</label><select id="dogB"></select></div><canvas id="pitchB" aria-label="Dog B comparison field"></canvas><div class="race-readout" id="scoreB">0 / 8 penned</div><button id="useB" class="secondary full">Work with dog B</button></section>
+    </div>
+    <p class="race-note" id="raceNote" role="status">Draw an unseen field to attempt a qualification card.</p>
+  </dialog>
+</body>
+</html>
